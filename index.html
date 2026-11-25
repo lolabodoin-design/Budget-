@@ -76,6 +76,26 @@ td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-s
 td input{width:110px;text-align:right;background:light-dark(#fff8d6,#2a2610)}tr.cur td{background:var(--bg)}tr.cur td:first-child{font-weight:600}
 .pos{color:var(--sav)}.negc{color:var(--warn)}
 @media(max-width:600px){table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:10em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:9.5em;margin-inline-start:-10em;white-space:normal;color:var(--mute);font-family:Nunito,sans-serif}.stack td:empty{display:none}.stack td{white-space:normal}select{width:130px}}
+.more{display:inline-block;margin-top:10px;color:var(--cobink);font-weight:700;text-decoration:none;padding:8px 0}
+.hhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.hhead select{width:auto;min-width:160px}
+.journal li .n{flex:1;min-width:0;overflow-wrap:anywhere}
+.cats div{display:grid;grid-template-columns:minmax(0,7em) minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 0;font-size:15px}
+.cats .tr{height:12px;background:var(--zone);border-radius:6px;overflow:hidden}.cats .tr i{display:block;height:100%;background:var(--cob);border-radius:6px}
+.cats b{font-family:Fredoka,Nunito,sans-serif;white-space:nowrap;font-weight:600}
+@media(max-width:600px){
+ #epTable thead{display:none}#epTable,#epTable tbody{display:block}
+ #epTable tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 14px;padding:14px 16px;margin-bottom:12px;background:var(--bg);border:1px solid var(--line);border-radius:18px}
+ #epTable tr.cur{border:2px solid var(--cob)}
+ #epTable td{display:block;border:0;padding:0;text-align:left;white-space:normal;background:none!important}
+ #epTable td.m{grid-column:1/-1;font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:8px}
+ #epTable td[data-c]::before,#epTable td.in::before{display:block;font:600 12px Nunito,sans-serif;color:var(--mute);margin-bottom:2px}
+ #epTable td[data-c=p]::before{content:"À mettre"}#epTable td.in::before{content:"J'ai vraiment mis"}
+ #epTable td[data-c=b]::before{content:"Solde fin de mois"}#epTable td[data-c=o]::before{content:"Voyage"}#epTable td[data-c=g]::before{content:"Écart"}
+ #epTable td[data-c=p]{font-size:20px}#epTable td.in{grid-row:2;grid-column:2}
+ #epTable td.in input{width:100%}
+ #epTable td[data-c=o]:empty,#epTable td[data-c=g]:empty{display:none}
+ .scroll{overflow:visible}
+}
 @media(max-width:760px){.hero,.grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){.legend{grid-template-columns:minmax(0,1fr)}.addrow{grid-template-columns:minmax(0,1fr) 110px}.addrow button{grid-column:1/-1}input.money{width:104px}}
 @media(prefers-reduced-motion:reduce){.bar div,.meter div{transition:none}}
@@ -83,14 +103,14 @@ td input{width:110px;text-align:right;background:light-dark(#fff8d6,#2a2610)}tr.
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
 <body>
-<header class="strip"><h1><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="#fff"/><ellipse cx="33" cy="37" rx="20" ry="16" fill="#ff8fbf"/><path d="M17 27l-3-9 9 5z" fill="#ff8fbf"/><path d="M40 23l6-8 1 10z" fill="#ff8fbf"/><rect x="28" y="20" width="10" height="3" rx="1.5" fill="#c2185b"/><ellipse cx="47" cy="39" rx="6" ry="5" fill="#ff6fa8"/><circle cx="45.5" cy="39" r="1.2" fill="#7a1048"/><circle cx="48.5" cy="39" r="1.2" fill="#7a1048"/><path d="M27 32q3-3 6 0" stroke="#3b0f2e" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="38" cy="32" r="2" fill="#3b0f2e"/><path d="M36 28.5l3.5-1.5" stroke="#3b0f2e" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="26" cy="38" rx="3" ry="2" fill="#ff5c9d" opacity=".7"/><path d="M20 22l-6-5v10z M20 22l6-5v10z" fill="#e8337f"/><circle cx="20" cy="22" r="2.2" fill="#c2185b"/><rect x="21" y="50" width="5" height="6" rx="2" fill="#ff8fbf"/><rect x="38" y="50" width="5" height="6" rx="2" fill="#ff8fbf"/><text x="50" y="16" font-size="12" font-family="Fredoka,sans-serif" font-weight="700" fill="#e8337f">€</text></svg>Mon budget</h1><nav class="tabs"><a href="#budget" id="t-budget">Budget du mois</a><a href="#epargne" id="t-epargne">Épargne</a></nav><span id="month"></span></header>
+<header class="strip"><h1><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="#fff"/><ellipse cx="33" cy="37" rx="20" ry="16" fill="#ff8fbf"/><path d="M17 27l-3-9 9 5z" fill="#ff8fbf"/><path d="M40 23l6-8 1 10z" fill="#ff8fbf"/><rect x="28" y="20" width="10" height="3" rx="1.5" fill="#c2185b"/><ellipse cx="47" cy="39" rx="6" ry="5" fill="#ff6fa8"/><circle cx="45.5" cy="39" r="1.2" fill="#7a1048"/><circle cx="48.5" cy="39" r="1.2" fill="#7a1048"/><path d="M27 32q3-3 6 0" stroke="#3b0f2e" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="38" cy="32" r="2" fill="#3b0f2e"/><path d="M36 28.5l3.5-1.5" stroke="#3b0f2e" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="26" cy="38" rx="3" ry="2" fill="#ff5c9d" opacity=".7"/><path d="M20 22l-6-5v10z M20 22l6-5v10z" fill="#e8337f"/><circle cx="20" cy="22" r="2.2" fill="#c2185b"/><rect x="21" y="50" width="5" height="6" rx="2" fill="#ff8fbf"/><rect x="38" y="50" width="5" height="6" rx="2" fill="#ff8fbf"/><text x="50" y="16" font-size="12" font-family="Fredoka,sans-serif" font-weight="700" fill="#e8337f">€</text></svg>Mon budget</h1><nav class="tabs"><a href="#budget" id="t-budget">Budget du mois</a><a href="#depenses" id="t-depenses">Dépenses</a><a href="#epargne" id="t-epargne">Épargne</a></nav><span id="month"></span></header>
 <main id="v-budget">
 
 <section class="band hero">
   <div>
-    <p class="lbl">Ce qu'il te reste pour tes loisirs ce mois-ci</p>
+    <p class="lbl">Ce qu'il te reste pour tes loisirs jusqu'à ta prochaine paie</p>
     <p class="big num" id="left">—</p>
-    <p class="sub">Soit environ <b id="perWeek">—</b> par semaine, ou <b id="perDay">—</b> par jour jusqu'à la fin du mois.</p>
+    <p class="sub" id="paceLine">—</p>
     <div class="meter"><div id="meter"></div></div>
     <p class="lbl" id="spentLine"></p>
     <div class="quick">
@@ -102,6 +122,7 @@ td input{width:110px;text-align:right;background:light-dark(#fff8d6,#2a2610)}tr.
       </form>
       <div class="chips" id="catChips"></div>
       <p class="toast" id="toast" aria-live="polite"></p>
+      <a class="more" href="#depenses">Voir l'historique de mes dépenses →</a>
     </div>
   </div>
   <div>
@@ -139,11 +160,32 @@ td input{width:110px;text-align:right;background:light-dark(#fff8d6,#2a2610)}tr.
   </div>
 
   <div class="panel journal">
-    <h2>Mes dépenses loisirs du mois</h2>
-    <p class="hint">Tout ce que tu as noté ce mois-ci. Touche × pour supprimer une dépense.</p>
+    <h2>Mes dernières dépenses loisirs</h2>
+    <p class="hint">Les 5 dernières de ce mois-ci. Tout repart à zéro le 25, à chaque paie, et l'historique est gardé.</p>
     <ul id="spends"></ul>
     <p class="empty" id="spEmpty">Aucune dépense notée ce mois-ci.</p>
-    <div style="margin-top:12px"><button id="newMonth">Commencer un nouveau mois</button> <span id="confirmBox" hidden><button id="confirmYes" class="pri">Oui, vider la liste</button> <button id="confirmNo">Annuler</button></span></div>
+    <a class="more" href="#depenses">Voir tout l'historique →</a>
+  </div>
+</section>
+</main>
+
+<main id="v-depenses" hidden>
+<section class="band hero">
+  <div>
+    <p class="lbl" id="hTitle">Dépensé en loisirs ce mois-ci</p>
+    <p class="big num" id="hTotal">—</p>
+    <p class="sub" id="hSub"></p>
+  </div>
+  <div>
+    <p class="lbl">Par catégorie</p>
+    <div id="hCats" class="cats"></div>
+  </div>
+</section>
+<section class="band" style="padding-top:0">
+  <div class="panel journal">
+    <div class="hhead"><h2>Historique</h2><select id="hMonth" aria-label="Choisir le mois"></select></div>
+    <ul id="hList"></ul>
+    <p class="empty" id="hEmpty">Aucune dépense notée pour ce mois.</p>
   </div>
 </section>
 </main>
@@ -179,7 +221,7 @@ td input{width:110px;text-align:right;background:light-dark(#fff8d6,#2a2610)}tr.
   </div>
   <div class="panel wide">
     <h2>Mois par mois</h2>
-    <div class="scroll"><table class="stack" id="epTable"><thead><tr><th>Mois</th><th>À mettre (calculé)</th><th>Ce que j'ai vraiment mis</th><th>Voyage</th><th>Solde en fin de mois</th><th>Écart</th></tr></thead><tbody></tbody></table></div>
+    <div class="scroll"><table id="epTable"><thead><tr><th>Mois</th><th>À mettre (calculé)</th><th>Ce que j'ai vraiment mis</th><th>Voyage</th><th>Solde en fin de mois</th><th>Écart</th></tr></thead><tbody></tbody></table></div>
   </div>
 </section>
 </main>
@@ -195,8 +237,12 @@ const SUB_PRESETS = ['Forfait mobile', 'Box internet', 'Spotify', 'Netflix', 'Di
 const FIX_PRESETS = ['Courses', 'Transports', 'Essence', 'Pharmacie', 'Cadeaux'];
 
 const now = new Date();
-const monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
-$('month').textContent = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+const PAYDAY = 25;
+const pStart = now.getDate() >= PAYDAY ? new Date(now.getFullYear(), now.getMonth(), PAYDAY) : new Date(now.getFullYear(), now.getMonth() - 1, PAYDAY);
+const pEnd = new Date(pStart.getFullYear(), pStart.getMonth() + 1, PAYDAY - 1);
+const monthKey = pStart.getFullYear() + '-' + String(pStart.getMonth() + 1).padStart(2, '0');
+const dShort = d => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+$('month').textContent = 'Du ' + dShort(pStart) + ' au ' + dShort(pEnd);
 
 const SEED_SUBS = [];
 const seedSubs = () => SEED_SUBS.map(([name, amount]) => ({ id: uid(), name, amount, date: '' }));
@@ -207,12 +253,12 @@ const EP_MONTHS = ['Novembre 2026','Décembre 2026','Janvier 2027','Février 202
 const EP_END = ['2026-11-30','2026-12-31','2027-01-31','2027-02-28','2027-03-31','2027-04-30','2027-05-31','2027-06-30','2027-07-31','2027-08-31'];
 const defaultEp = () => ({ start: 0, goal: 0, trip: 0, tripMonth: 6, real: EP_MONTHS.map(() => null) });
 state.ep = defaultEp();
-const curIdx = Math.min(9, Math.max(0, (now.getFullYear() - 2026) * 12 + now.getMonth() - 10));
+const curIdx = Math.min(9, Math.max(0, (pStart.getFullYear() - 2026) * 12 + pStart.getMonth() - 10));
 
 function load(obj) {
   if (!obj || typeof obj !== 'object') return;
   const arr = a => Array.isArray(a) ? a.filter(x => x && typeof x === 'object').map(x => ({ id: String(x.id || '').replace(/[^a-z0-9]/gi, '') || uid(), name: String(x.name || ''), amount: num(x.amount), date: String(x.date || '') })) : [];
-  state = { income: num(obj.income), other: num(obj.other), savings: num(obj.savings), subs: arr(obj.subs), fixed: arr(obj.fixed), spends: arr(obj.spends), month: String(obj.month || monthKey), seeded: true, ep: defaultEp() };
+  state = { income: num(obj.income), other: num(obj.other), savings: num(obj.savings), subs: arr(obj.subs), fixed: arr(obj.fixed), spends: Array.isArray(obj.spends) ? arr(obj.spends).map((s, i) => ({ ...s, m: /^\d{4}-\d{2}$/.test(String(obj.spends[i] && obj.spends[i].m)) ? String(obj.spends[i].m) : String(obj.month || monthKey) })) : [], month: String(obj.month || monthKey), seeded: true, ep: defaultEp() };
   const e = obj.ep;
   if (e && typeof e === 'object') {
     state.ep = { start: num(e.start), goal: num(e.goal), trip: num(e.trip), tripMonth: Math.min(9, Math.max(0, Math.round(num(e.tripMonth)))), real: EP_MONTHS.map((_, i) => Array.isArray(e.real) && e.real[i] !== null && e.real[i] !== undefined && e.real[i] !== '' ? num(e.real[i]) : null) };
@@ -272,19 +318,44 @@ function chips(presets, el, key, box) {
   $(el).addEventListener('click', e => { const p = e.target.dataset.p; if (p) addItem(key, box, p); });
 }
 
+const MONTHS_FR = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const mLabel = k => { const [y, m] = k.split('-').map(Number); return 'Du 25 ' + MONTHS_FR[m - 1] + ' au 24 ' + MONTHS_FR[m % 12] + (m === 12 ? ' ' + (y + 1) : ''); };
+const curSpends = () => state.spends.filter(s => s.m === monthKey);
+function spendLi(s) {
+  const li = document.createElement('li');
+  const d = document.createElement('span'); d.className = 'd'; d.textContent = s.date;
+  const n = document.createElement('span'); n.className = 'n'; n.textContent = s.name || 'Dépense';
+  const a = document.createElement('span'); a.className = 'a num'; a.textContent = fmt2(s.amount);
+  const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'Supprimer ' + (s.name || 'cette dépense'));
+  x.addEventListener('click', () => { state.spends = state.spends.filter(y => y.id !== s.id); renderSpends(); compute(); save(); });
+  li.append(d, n, a, x); return li;
+}
+const fmt2 = n => n.toLocaleString('fr-FR', { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }) + ' €';
+function renderHistory() {
+  const months = [...new Set([monthKey, ...state.spends.map(s => s.m)])].sort().reverse();
+  const sel = $('hMonth'); const cur = sel.value && months.includes(sel.value) ? sel.value : monthKey;
+  sel.innerHTML = months.map(k => '<option value="' + k + '">' + mLabel(k) + '</option>').join(''); sel.value = cur;
+  const list = state.spends.filter(s => s.m === cur);
+  const total = list.reduce((t, s) => t + s.amount, 0);
+  $('hTitle').textContent = cur === monthKey ? 'Dépensé en loisirs ce mois-ci' : 'Dépensé en loisirs ' + mLabel(cur).toLowerCase();
+  $('hTotal').textContent = fmt2(total);
+  $('hSub').textContent = list.length ? list.length + ' dépense' + (list.length > 1 ? 's' : '') + ' notée' + (list.length > 1 ? 's' : '') + '.' : 'Rien de noté pour l\'instant.';
+  const cats = {}; list.forEach(s => { const k = s.name || 'Autre'; cats[k] = (cats[k] || 0) + s.amount; });
+  const arrC = Object.entries(cats).sort((a, b) => b[1] - a[1]); const mx = arrC.length ? arrC[0][1] : 1;
+  $('hCats').innerHTML = '';
+  arrC.forEach(([k, v]) => { const d = document.createElement('div'); const l = document.createElement('span'); l.textContent = k; const t = document.createElement('span'); t.className = 'tr'; const i = document.createElement('i'); i.style.width = (v / mx * 100).toFixed(1) + '%'; t.append(i); const b = document.createElement('b'); b.textContent = fmt2(v); d.append(l, t, b); $('hCats').append(d); });
+  if (!arrC.length) $('hCats').innerHTML = '<p class="empty">Tes catégories apparaîtront ici.</p>';
+  const ul = $('hList'); ul.innerHTML = '';
+  [...list].reverse().forEach(s => ul.append(spendLi(s)));
+  $('hEmpty').hidden = list.length > 0;
+}
 function renderSpends() {
   const ul = $('spends');
   ul.innerHTML = '';
-  [...state.spends].reverse().forEach(s => {
-    const li = document.createElement('li');
-    const d = document.createElement('span'); d.className = 'd'; d.textContent = s.date;
-    const n = document.createElement('span'); n.textContent = s.name || 'Dépense';
-    const a = document.createElement('span'); a.className = 'a num'; a.textContent = fmt(s.amount);
-    const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'Supprimer');
-    x.addEventListener('click', () => { state.spends = state.spends.filter(y => y.id !== s.id); renderSpends(); compute(); save(); });
-    li.append(d, n, a, x); ul.append(li);
-  });
-  $('spEmpty').hidden = state.spends.length > 0;
+  const cs = curSpends();
+  cs.slice(-5).reverse().forEach(s => ul.append(spendLi(s)));
+  $('spEmpty').hidden = cs.length > 0;
+  renderHistory();
 }
 
 function compute() {
@@ -292,14 +363,14 @@ function compute() {
   const subT = state.subs.reduce((t, x) => t + x.amount, 0);
   const fixT = state.fixed.reduce((t, x) => t + x.amount, 0);
   const fun = inc - state.savings - subT - fixT;
-  const spent = state.spends.reduce((t, x) => t + x.amount, 0);
+  const spent = curSpends().reduce((t, x) => t + x.amount, 0);
   const left = fun - spent;
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const daysLeft = lastDay - now.getDate() + 1;
+  const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysLeft = Math.max(1, Math.round((pEnd - today0) / 86400000) + 1);
   $('left').textContent = fmt(left);
   $('left').classList.toggle('neg', left < 0);
-  $('perDay').textContent = fmt(Math.max(0, left) / daysLeft);
-  $('perWeek').textContent = fmt(Math.max(0, left) / daysLeft * 7);
+  const l0 = Math.max(0, left), perDay = l0 / daysLeft;
+  $('paceLine').textContent = 'Il reste ' + daysLeft + ' jour' + (daysLeft > 1 ? 's' : '') + ' avant ta prochaine paie (le 25), soit environ ' + fmt(perDay) + ' par jour' + (daysLeft >= 14 ? ' ou ' + fmt(perDay * 7) + ' par semaine.' : '.');
   $('subTot').textContent = fmt(subT);
   $('fixTot').textContent = fmt(fixT);
   const parts = [
@@ -314,7 +385,7 @@ function compute() {
   const pct = fun > 0 ? Math.min(100, spent / fun * 100) : (spent > 0 ? 100 : 0);
   $('meter').style.width = pct + '%';
   $('meter').classList.toggle('over', spent > fun);
-  $('spentLine').textContent = 'Dépensé : ' + fmt(spent) + ' sur ' + fmt(Math.max(0, fun)) + ' de budget loisirs' + (fun < 0 ? ' — attention, tes dépenses fixes et ton épargne dépassent déjà ce qui rentre.' : '.');
+  $('spentLine').textContent = 'Dépensé : ' + fmt2(spent) + ' sur ' + fmt(Math.max(0, fun)) + ' de budget loisirs' + (fun < 0 ? ' — attention, tes dépenses fixes et ton épargne dépassent déjà ce qui rentre.' : '.');
 }
 
 function epCompute() {
@@ -339,7 +410,7 @@ function epCompute() {
 }
 function epRenderTable() {
   const tb = $('epTable').tBodies[0];
-  tb.innerHTML = EP_MONTHS.map((m, i) => '<tr' + (i === curIdx ? ' class="cur"' : '') + '><td>' + m + (i === curIdx ? ' · ce mois-ci' : '') + '</td><td data-c="p"></td><td><input inputmode="decimal" data-i="' + i + '" aria-label="Ce que j\'ai vraiment mis en ' + m + '" placeholder="—"></td><td data-c="o"></td><td data-c="b"></td><td data-c="g"></td></tr>').join('');
+  tb.innerHTML = EP_MONTHS.map((m, i) => '<tr' + (i === curIdx ? ' class="cur"' : '') + '><td class="m"><span>' + m + '</span>' + (i === curIdx ? '<span style="color:var(--cobink)">ce mois-ci</span>' : '') + '</td><td data-c="p"></td><td class="in"><input inputmode="decimal" data-i="' + i + '" aria-label="Ce que j\'ai vraiment mis en ' + m + '" placeholder="—"></td><td data-c="o"></td><td data-c="b"></td><td data-c="g"></td></tr>').join('');
   tb.querySelectorAll('input[data-i]').forEach(inp => { const v = state.ep.real[+inp.dataset.i]; inp.value = v === null ? '' : String(v).replace('.', ','); });
   $('epTripMonth').innerHTML = EP_MONTHS.map((m, i) => '<option value="' + i + '">' + m + '</option>').join('');
   $('epTripMonth').value = String(state.ep.tripMonth);
@@ -377,11 +448,12 @@ $('epTable').addEventListener('input', ev => {
   epUpdate(); save();
 });
 function route() {
-  const ep = location.hash === '#epargne';
-  $('v-budget').hidden = ep; $('v-epargne').hidden = !ep;
-  $('t-budget').classList.toggle('on', !ep); $('t-epargne').classList.toggle('on', ep);
-  $('month').hidden = ep;
+  const v = location.hash === '#epargne' ? 'epargne' : location.hash === '#depenses' ? 'depenses' : 'budget';
+  ['budget', 'depenses', 'epargne'].forEach(k => { $('v-' + k).hidden = k !== v; $('t-' + k).classList.toggle('on', k === v); });
+  $('month').hidden = v !== 'budget';
+  window.scrollTo(0, 0);
 }
+$('hMonth').addEventListener('change', renderHistory);
 window.addEventListener('hashchange', route);
 
 function renderAll() {
@@ -403,15 +475,12 @@ $('catChips').addEventListener('click', e => { const c = e.target.dataset.c; if 
 $('spendForm').addEventListener('submit', e => {
   e.preventDefault();
   const a = num($('spAmount').value); if (!a) { $('spAmount').focus(); return; }
-  state.spends.push({ id: uid(), name: $('spLabel').value.trim(), amount: a, date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) });
+  state.spends.push({ id: uid(), m: monthKey, name: $('spLabel').value.trim(), amount: a, date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) });
   $('spLabel').value = ''; $('spAmount').value = '';
   $('catChips').querySelectorAll('button').forEach(b => b.classList.remove('sel'));
   renderSpends(); compute(); save();
   $('toast').textContent = 'C\'est noté ! Il te reste ' + $('left').textContent + ' pour tes loisirs.';
 });
-$('newMonth').addEventListener('click', () => { $('confirmBox').hidden = false; $('newMonth').hidden = true; });
-$('confirmNo').addEventListener('click', () => { $('confirmBox').hidden = true; $('newMonth').hidden = false; });
-$('confirmYes').addEventListener('click', () => { state.spends = []; state.month = monthKey; $('confirmBox').hidden = true; $('newMonth').hidden = false; renderSpends(); compute(); save(); });
 
 try { const raw = localStorage.getItem(LS); if (raw) load(JSON.parse(raw)); } catch (e) {}
 route();
@@ -431,8 +500,7 @@ $('status').textContent = 'Tes chiffres sont gardés dans ce navigateur.';
     ref = r;
     if (snap.exists) { load(snap.data()); renderAll(); }
     else persist();
-    if (state.month !== monthKey && state.spends.length) $('status').textContent = 'Nouveau mois ! Pense à vider ta liste de dépenses loisirs si tu repars de zéro.';
-    else $('status').textContent = 'Enregistré — tes chiffres sont gardés d\'une visite à l\'autre.';
+    $('status').textContent = 'Enregistré — tes chiffres sont gardés d\'une visite à l\'autre.';
   } catch (e) {}
 })();
 }
